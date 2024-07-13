@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------*/
+//*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
 /*    Author:       VEX                                                       */
@@ -108,6 +108,9 @@ void unclamp() {
   Mogo2.set(false);
 }
 
+bool clamptrue = false;
+bool prevclamp = false;
+
 void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
@@ -115,11 +118,24 @@ void usercontrol(void) {
 
     Arcade();
     intaking();
-    if (controller1.ButtonL1.pressed()) {
+    // For clamping
+    if (controller1.ButtonL1.pressing()) {
+      if (prevclamp == false) {
+        clamptrue = !clamptrue;
+        prevclamp = true;
+      }
+    } else {
+      if (prevclamp == true) {
+        prevclamp = false;
+      }
+    } 
+
+    if (clamptrue) {
       clamp();
-    } else if (controller1.ButtonL2.pressed()) {
+    } else if (!clamptrue) {
       unclamp();
     }
+
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
